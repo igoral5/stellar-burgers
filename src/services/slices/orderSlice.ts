@@ -1,4 +1,4 @@
-import { getOrderByNumberApi, orderBurgerApi, TNewOrder } from '@api';
+import { orderBurgerApi, TNewOrder } from '@api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TConstructorIngredient, TIngredient, TOrder } from '@utils-types';
 import { v4 as uuidv4 } from 'uuid';
