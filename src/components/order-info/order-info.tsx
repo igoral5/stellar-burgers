@@ -2,13 +2,15 @@ import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-import { RootState, useDispatch, useSelector } from '@services';
+import { useDispatch, useSelector } from '@services';
 import { useParams } from 'react-router-dom';
-import { ingredientsSelector, ordersProfile } from '@slices';
+import {
+  ingredientsSelector,
+  isLoadingOrderInfoSelector,
+  orderInfoGet,
+  orderInfoSelector
+} from '@slices';
 import { NotFound404 } from '@pages';
-
-const ordersByNumSelector = (num: number) => (state: RootState) =>
-  state.orders.orders.find((val) => val.number === num);
 
 export const OrderInfo: FC = () => {
   /** TODO: взять переменные orderData и ingredients из стора */
@@ -16,14 +18,16 @@ export const OrderInfo: FC = () => {
 
   const numberInt = parseInt(number!);
 
-  const orderData = useSelector(ordersByNumSelector(numberInt));
+  const orderData = useSelector(orderInfoSelector);
+
+  const isLoading = useSelector(isLoadingOrderInfoSelector);
 
   const ingredients = useSelector(ingredientsSelector);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(ordersProfile());
+    dispatch(orderInfoGet(numberInt));
   }, []);
 
   /* Готовим данные для отображения */
@@ -68,7 +72,7 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
+  if (isLoading) {
     return <Preloader />;
   }
 
@@ -76,5 +80,5 @@ export const OrderInfo: FC = () => {
     return <NotFound404 />;
   }
 
-  return <OrderInfoUI orderInfo={orderInfo} />;
+  return <OrderInfoUI orderInfo={orderInfo!} />;
 };

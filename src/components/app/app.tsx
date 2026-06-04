@@ -117,7 +117,7 @@ const App = () => {
             <Route
               path='/feed/:number'
               element={
-                <Modal onClose={onCloseParams('/')} title='Заказ'>
+                <Modal onClose={onCloseParams('/feed')} title='Заказ'>
                   <OrderInfo />
                 </Modal>
               }
