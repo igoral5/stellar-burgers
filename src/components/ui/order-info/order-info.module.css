@@ -74,3 +74,12 @@
 .total {
   margin-left: auto;
 }
+
+.num {
+  position: relative;
+  top: -44px;
+  font-family: 'Iceland';
+  font-size: 28px;
+  font-weight: 400;
+  width: max-content;
+}

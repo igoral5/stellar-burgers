@@ -117,7 +117,7 @@ const App = () => {
             <Route
               path='/feed/:number'
               element={
-                <Modal onClose={onCloseParams('/feed')} title='Заказ'>
+                <Modal onClose={onCloseParams('/feed')} title=''>
                   <OrderInfo />
                 </Modal>
               }
@@ -134,10 +134,7 @@ const App = () => {
               path='/profile/orders/:number'
               element={
                 <ProtectedRoute>
-                  <Modal
-                    onClose={onCloseParams('/profile/orders')}
-                    title='Заказ'
-                  >
+                  <Modal onClose={onCloseParams('/profile/orders')} title=''>
                     <OrderInfo />
                   </Modal>
                 </ProtectedRoute>
@@ -150,7 +147,7 @@ const App = () => {
               <Route
                 path='/feed/:number'
                 element={
-                  <Modal onClose={onCloseParams('/feed')} title='Заказ'>
+                  <Modal onClose={onCloseParams('/feed')} title=''>
                     <OrderInfo />
                   </Modal>
                 }
@@ -158,7 +155,10 @@ const App = () => {
               <Route
                 path='/ingredients/:id'
                 element={
-                  <Modal onClose={onCloseParams('/')} title='Ингридиент'>
+                  <Modal
+                    onClose={onCloseParams('/')}
+                    title='Детали ингредиента'
+                  >
                     <IngredientDetails />
                   </Modal>
                 }
@@ -167,10 +167,7 @@ const App = () => {
                 path='/profile/orders/:number'
                 element={
                   <ProtectedRoute>
-                    <Modal
-                      onClose={onCloseParams('/profile/orders')}
-                      title='Заказ'
-                    >
+                    <Modal onClose={onCloseParams('/profile/orders')} title=''>
                       <OrderInfo />
                     </Modal>
                   </ProtectedRoute>
