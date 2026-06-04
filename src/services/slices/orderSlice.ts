@@ -1,4 +1,4 @@
-import { orderBurgerApi, TNewOrder } from '@api';
+import { orderBurgerApi } from '@api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TConstructorIngredient, TIngredient, TOrder } from '@utils-types';
 import { v4 as uuidv4 } from 'uuid';
@@ -9,7 +9,7 @@ interface OrderState {
     ingredients: TConstructorIngredient[];
   };
   orderRequest: boolean;
-  orderModalData: TNewOrder | null;
+  orderModalData: TOrder | null;
   orderError: string | null;
 }
 
@@ -25,9 +25,10 @@ const initialState: OrderState = {
 
 export const orderSend = createAsyncThunk(
   'order/send',
-  async (ids: string[]) => {
-    const order = await orderBurgerApi(ids);
-    return order.order;
+  async (ids: string[]): Promise<TOrder> => {
+    const response = await orderBurgerApi(ids);
+    const { owner, price, ...order } = response.order;
+    return { ...order, ingredients: ids };
   }
 );
 

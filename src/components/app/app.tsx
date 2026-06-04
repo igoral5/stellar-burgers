@@ -20,7 +20,7 @@ import {
   ProtectedRoute
 } from '@components';
 import { Preloader } from '@ui';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes, To, useLocation, useNavigate } from 'react-router-dom';
 
 import {
   errorSelector,
@@ -44,12 +44,12 @@ const App = () => {
 
   const location = useLocation();
 
-  const navigator = useNavigate();
+  const navigate = useNavigate();
 
   const background = location.state?.background;
 
-  const onClose = () => {
-    navigator('/');
+  const onCloseParams = (param: To) => () => {
+    navigate(param);
   };
 
   return (
@@ -117,7 +117,7 @@ const App = () => {
             <Route
               path='/feed/:number'
               element={
-                <Modal onClose={onClose} title='Заказ'>
+                <Modal onClose={onCloseParams('/')} title='Заказ'>
                   <OrderInfo />
                 </Modal>
               }
@@ -125,7 +125,7 @@ const App = () => {
             <Route
               path='/ingredients/:id'
               element={
-                <Modal onClose={onClose} title='Детали ингредиента'>
+                <Modal onClose={onCloseParams('/')} title='Детали ингредиента'>
                   <IngredientDetails />
                 </Modal>
               }
@@ -134,7 +134,10 @@ const App = () => {
               path='/profile/orders/:number'
               element={
                 <ProtectedRoute>
-                  <Modal onClose={onClose} title='Заказ'>
+                  <Modal
+                    onClose={onCloseParams('/profile/orders')}
+                    title='Заказ'
+                  >
                     <OrderInfo />
                   </Modal>
                 </ProtectedRoute>
@@ -147,7 +150,7 @@ const App = () => {
               <Route
                 path='/feed/:number'
                 element={
-                  <Modal onClose={onClose} title='Заказ'>
+                  <Modal onClose={onCloseParams('/feed')} title='Заказ'>
                     <OrderInfo />
                   </Modal>
                 }
@@ -155,7 +158,7 @@ const App = () => {
               <Route
                 path='/ingredients/:id'
                 element={
-                  <Modal onClose={onClose} title='Ингридиент'>
+                  <Modal onClose={onCloseParams('/')} title='Ингридиент'>
                     <IngredientDetails />
                   </Modal>
                 }
@@ -164,7 +167,10 @@ const App = () => {
                 path='/profile/orders/:number'
                 element={
                   <ProtectedRoute>
-                    <Modal onClose={onClose} title='Заказ'>
+                    <Modal
+                      onClose={onCloseParams('/profile/orders')}
+                      title='Заказ'
+                    >
                       <OrderInfo />
                     </Modal>
                   </ProtectedRoute>
