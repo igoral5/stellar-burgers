@@ -5,7 +5,6 @@ import { FeedUI } from '@ui-pages';
 import { FC, useEffect } from 'react';
 
 export const Feed: FC = () => {
-  /** TODO: взять переменную из стора */
   const orders = useSelector(feedsSelector);
 
   const isLoading = useSelector(isLoadingFeedsSelector);

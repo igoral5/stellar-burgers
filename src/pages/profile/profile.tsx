@@ -4,7 +4,6 @@ import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
   const user = useSelector(userSelector)!;
 
   const error = useSelector(errorUserSelector);

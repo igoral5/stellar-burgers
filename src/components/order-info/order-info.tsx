@@ -13,8 +13,7 @@ import {
 import { NotFound404 } from '@pages';
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const { number } = useParams();
+  const { number } = useParams<{ number: string }>();
 
   const numberInt = parseInt(number!);
 

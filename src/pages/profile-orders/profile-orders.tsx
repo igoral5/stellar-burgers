@@ -9,7 +9,6 @@ import { ProfileOrdersUI } from '@ui-pages';
 import { FC, useEffect } from 'react';
 
 export const ProfileOrders: FC = () => {
-  /** TODO: взять переменную из стора */
   const orders = useSelector(ordersSelector);
 
   const isLoading = useSelector(isLoadingOrdersSelector);
