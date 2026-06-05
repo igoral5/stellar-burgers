@@ -1,21 +1,33 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { useDispatch, useSelector } from '@services';
+import { useParams } from 'react-router-dom';
+import {
+  ingredientsSelector,
+  isLoadingOrderInfoSelector,
+  orderInfoGet,
+  orderInfoSelector
+} from '@slices';
+import { NotFound404 } from '@pages';
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+  const { number } = useParams<{ number: string }>();
 
-  const ingredients: TIngredient[] = [];
+  const numberInt = parseInt(number!);
+
+  const orderData = useSelector(orderInfoSelector);
+
+  const isLoading = useSelector(isLoadingOrderInfoSelector);
+
+  const ingredients = useSelector(ingredientsSelector);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(orderInfoGet(numberInt));
+  }, [dispatch]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -59,9 +71,13 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
+  if (isLoading) {
     return <Preloader />;
   }
 
-  return <OrderInfoUI orderInfo={orderInfo} />;
+  if (Number.isNaN(numberInt) || !orderData) {
+    return <NotFound404 />;
+  }
+
+  return <OrderInfoUI orderInfo={orderInfo!} />;
 };
