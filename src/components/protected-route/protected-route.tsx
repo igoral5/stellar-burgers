@@ -1,5 +1,5 @@
-import { useDispatch, useSelector } from '@services';
-import { getUser, isLoadingUserSelector, userSelector } from '@slices';
+import { useSelector } from '@services';
+import { isLoadingUserSelector, userSelector } from '@slices';
 import { Preloader } from '@ui';
 import { FC, ReactNode, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
@@ -18,14 +18,6 @@ export const ProtectedRoute: FC<ProtectedRouteProps> = ({
   const user = useSelector(userSelector);
 
   const location = useLocation();
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (!user && !onlyUnAuth) {
-      dispatch(getUser());
-    }
-  }, []);
 
   if (isLoading) {
     return <Preloader />;

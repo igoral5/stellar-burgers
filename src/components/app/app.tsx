@@ -25,8 +25,10 @@ import { Route, Routes, To, useLocation, useNavigate } from 'react-router-dom';
 import {
   errorSelector,
   fetchIngredients,
+  getUser,
   ingredientsSelector,
-  isLoadingSelector
+  isLoadingSelector,
+  userSelector
 } from '@slices';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from '@services';
@@ -35,11 +37,18 @@ const App = () => {
   const isIngredientsLoading = useSelector(isLoadingSelector);
   const ingredients = useSelector(ingredientsSelector);
   const error = useSelector(errorSelector);
+  const user = useSelector(userSelector);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchIngredients());
+  }, []);
+
+  useEffect(() => {
+    if (!user) {
+      dispatch(getUser());
+    }
   }, []);
 
   const location = useLocation();
