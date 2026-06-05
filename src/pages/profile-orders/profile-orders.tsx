@@ -17,7 +17,7 @@ export const ProfileOrders: FC = () => {
 
   useEffect(() => {
     dispatch(ordersProfile());
-  }, []);
+  }, [dispatch]);
 
   if (isLoading) {
     return <Preloader />;

@@ -13,9 +13,7 @@ const initialState: ProfileOrdersState = {
   isLoading: false
 };
 
-export const ordersProfile = createAsyncThunk('orders/getAll', async () =>
-  getOrdersApi()
-);
+export const ordersProfile = createAsyncThunk('orders/getAll', getOrdersApi);
 
 export const profileOrdersSlice = createSlice({
   name: 'orders',

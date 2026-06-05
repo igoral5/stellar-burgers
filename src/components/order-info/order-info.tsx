@@ -27,7 +27,7 @@ export const OrderInfo: FC = () => {
 
   useEffect(() => {
     dispatch(orderInfoGet(numberInt));
-  }, []);
+  }, [dispatch]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {

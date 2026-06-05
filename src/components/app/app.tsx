@@ -15,6 +15,7 @@ import styles from './app.module.css';
 import {
   AppHeader,
   IngredientDetails,
+  Layout,
   Modal,
   OrderInfo,
   ProtectedRoute
@@ -43,13 +44,13 @@ const App = () => {
 
   useEffect(() => {
     dispatch(fetchIngredients());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (!user) {
       dispatch(getUser());
     }
-  }, []);
+  }, [dispatch, user]);
 
   const location = useLocation();
 
@@ -126,26 +127,26 @@ const App = () => {
             <Route
               path='/feed/:number'
               element={
-                <Modal onClose={onCloseParams('/feed')} title=''>
+                <Layout>
                   <OrderInfo />
-                </Modal>
+                </Layout>
               }
             />
             <Route
               path='/ingredients/:id'
               element={
-                <Modal onClose={onCloseParams('/')} title='Детали ингредиента'>
+                <Layout title='Детали ингредиента'>
                   <IngredientDetails />
-                </Modal>
+                </Layout>
               }
             />
             <Route
               path='/profile/orders/:number'
               element={
                 <ProtectedRoute>
-                  <Modal onClose={onCloseParams('/profile/orders')} title=''>
+                  <Layout>
                     <OrderInfo />
-                  </Modal>
+                  </Layout>
                 </ProtectedRoute>
               }
             />

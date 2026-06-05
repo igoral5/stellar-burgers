@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 interface OrderState {
   constructorItems: {
-    bun: TIngredient | null;
+    bun: TConstructorIngredient | null;
     ingredients: TConstructorIngredient[];
   };
   orderRequest: boolean;
@@ -36,15 +36,17 @@ export const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    addProduct: (state, action: PayloadAction<TIngredient>) => {
-      if (action.payload.type === 'bun') {
-        state.constructorItems.bun = action.payload;
-      } else {
-        state.constructorItems.ingredients.push({
-          ...action.payload,
-          id: uuidv4()
-        });
-      }
+    addProduct: {
+      reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
+        if (action.payload.type === 'bun') {
+          state.constructorItems.bun = action.payload;
+        } else {
+          state.constructorItems.ingredients.push(action.payload);
+        }
+      },
+      prepare: (ingredient: TIngredient) => ({
+        payload: { ...ingredient, id: uuidv4() }
+      })
     },
     removeProduct: (state, action: PayloadAction<string>) => {
       state.constructorItems.ingredients =
@@ -76,8 +78,6 @@ export const orderSlice = createSlice({
     },
     closeModal: (state) => {
       state.orderModalData = null;
-      state.constructorItems.bun = null;
-      state.constructorItems.ingredients = [];
     }
   },
   extraReducers: (builder) => {
@@ -94,6 +94,8 @@ export const orderSlice = createSlice({
       .addCase(orderSend.fulfilled, (state, acction) => {
         state.orderRequest = false;
         state.orderModalData = acction.payload;
+        state.constructorItems.bun = null;
+        state.constructorItems.ingredients = [];
       });
   },
   selectors: {

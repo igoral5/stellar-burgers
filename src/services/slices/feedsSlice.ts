@@ -17,9 +17,7 @@ const initialState: FeedsState = {
   isLoading: false
 };
 
-export const feedsGet = createAsyncThunk('feeds/getAll', async () =>
-  getFeedsApi()
-);
+export const feedsGet = createAsyncThunk('feeds/getAll', getFeedsApi);
 
 export const feedsSlice = createSlice({
   name: 'feeds',

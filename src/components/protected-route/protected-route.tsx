@@ -1,7 +1,7 @@
 import { useSelector } from '@services';
 import { isLoadingUserSelector, userSelector } from '@slices';
 import { Preloader } from '@ui';
-import { FC, ReactNode, useEffect } from 'react';
+import { FC, ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
 type ProtectedRouteProps = {
