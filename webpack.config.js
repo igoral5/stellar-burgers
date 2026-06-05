@@ -54,7 +54,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html'
     }),
-    new Dotenv()
+    new Dotenv({
+      systemvars: true
+    })
   ],
   resolve: {
     extensions: [
@@ -80,7 +82,7 @@ module.exports = {
       '@slices': path.resolve(__dirname, './src/services/slices'),
       '@selectors': path.resolve(__dirname, './src/services/selectors'),
       '@services': path.resolve(__dirname, './src/services/store.ts'),
-      '@cookie': path.resolve(__dirname, './src/utils/cookie.ts'),
+      '@cookie': path.resolve(__dirname, './src/utils/cookie.ts')
     }
   },
   output: {
