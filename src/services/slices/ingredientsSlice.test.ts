@@ -4,7 +4,7 @@ import {
   fetchIngredients,
   ingredientsSelector,
   ingredientsSlice,
-  initialState
+  initialIngredientsState
 } from '@slices';
 import { getIngredientsApi } from '@api';
 
@@ -78,20 +78,55 @@ describe('Reducer ingredients', () => {
   });
 
   it('Action ingredients/getAll/pending', () => {
-    const initialIngredientsState = {
-      ...initialState,
+    const initialState = {
+      ...initialIngredientsState,
       ingredients: mockIngredients,
       isIngredientsLoading: false,
       error: 'Error'
     };
 
-    const newState = ingredientsSlice.reducer(initialIngredientsState, {
+    const newState = ingredientsSlice.reducer(initialState, {
       type: 'ingredients/getAll/pending'
     });
 
     expect(newState.ingredients).toEqual([]);
     expect(newState.isIngredientsLoading).toBe(true);
     expect(newState.error).toBe(null);
+  });
+
+  it('Action ingredients/getAll/rejected', () => {
+    const initialState = {
+      ...initialIngredientsState,
+      ingredients: [],
+      error: null,
+      isIngredientsLoading: true
+    };
+
+    const newState = ingredientsSlice.reducer(initialState, {
+      type: 'ingredients/getAll/rejected',
+      error: { message: 'Error message' }
+    });
+
+    expect(newState.error).toBe('Error message');
+    expect(newState.ingredients).toEqual([]);
+    expect(newState.isIngredientsLoading).toBe(false);
+  });
+
+  it('Action ingredients/getAll/fulfilled', () => {
+    const initalState = {
+      ...initialIngredientsState,
+      ingredients: [],
+      isIngredientsLoading: true
+    };
+
+    const newState = ingredientsSlice.reducer(initalState, {
+      type: 'ingredients/getAll/fulfilled',
+      payload: mockIngredients
+    });
+
+    expect(newState.error).toBe(null);
+    expect(newState.isIngredientsLoading).toBe(false);
+    expect(newState.ingredients).toEqual(mockIngredients);
   });
 
   it('Async action fetchIngredients', async () => {
@@ -103,5 +138,23 @@ describe('Reducer ingredients', () => {
 
     expect(ingredients).toEqual(mockIngredients);
     expect(getIngredientsApiSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('Unknown action', () => {
+    const newState = ingredientsSlice.reducer(initialIngredientsState, {
+      type: 'UNKNOWN'
+    });
+
+    expect(newState).toEqual(initialIngredientsState);
+  });
+
+  it('Undefined state', () => {
+    const newState = ingredientsSlice.reducer(undefined, {
+      type: 'ingredients/getAll/pending'
+    });
+
+    expect(newState.ingredients).toEqual([]);
+    expect(newState.isIngredientsLoading).toBe(true);
+    expect(newState.error).toBe(null);
   });
 });
