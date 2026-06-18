@@ -2,8 +2,11 @@ import { orderBurgerApi } from '@api';
 import store from '@services';
 import {
   addProduct,
+  closeModal,
   initialOrderState,
   itemsSelector,
+  moveDown,
+  moveUp,
   orderSend,
   orderSlice,
   removeProduct,
@@ -214,6 +217,135 @@ describe('Reducer order', () => {
     });
   });
 
+  it('Move Up', () => {
+    const bun = { ...mockIngredients[0], id: uuidv4() };
+    const ingredients = [
+      { ...mockIngredients[1], id: uuidv4() },
+      { ...mockIngredients[2], id: uuidv4() },
+      { ...mockIngredients[3], id: uuidv4() }
+    ];
+    const initalState = {
+      ...initialOrderState,
+      constructorItems: {
+        bun,
+        ingredients
+      }
+    };
+
+    const newState = orderSlice.reducer(initalState, moveUp(1));
+
+    expect(newState.constructorItems).toEqual({
+      bun,
+      ingredients: [ingredients[1], ingredients[0], ingredients[2]]
+    });
+  });
+
+  it('Move Down', () => {
+    const bun = { ...mockIngredients[0], id: uuidv4() };
+    const ingredients = [
+      { ...mockIngredients[1], id: uuidv4() },
+      { ...mockIngredients[2], id: uuidv4() },
+      { ...mockIngredients[3], id: uuidv4() }
+    ];
+    const initalState = {
+      ...initialOrderState,
+      constructorItems: {
+        bun,
+        ingredients
+      }
+    };
+
+    const newState = orderSlice.reducer(initalState, moveDown(1));
+
+    expect(newState.constructorItems).toEqual({
+      bun,
+      ingredients: [ingredients[0], ingredients[2], ingredients[1]]
+    });
+  });
+
+  it('Close modal', () => {
+    const ids = mockOrderResponse.order.ingredients.map((val) => val._id);
+    const { owner, price, ...order } = mockOrderResponse.order;
+    const initialState = {
+      ...initialOrderState,
+      orderModalData: { ...order, ingredients: ids }
+    };
+
+    const newState = orderSlice.reducer(initialState, closeModal());
+
+    expect(newState.orderModalData).toBe(null);
+  });
+
+  it('Action order/send/pending', () => {
+    const ids = mockOrderResponse.order.ingredients.map((val) => val._id);
+    const { owner, price, ...order } = mockOrderResponse.order;
+    const initialState = {
+      ...initialOrderState,
+      orderModalData: { ...order, ingredients: ids },
+      orderRequest: false,
+      orderError: 'Error'
+    };
+
+    const newState = orderSlice.reducer(initialState, {
+      type: 'order/send/pending'
+    });
+
+    expect(newState.orderModalData).toBe(null);
+    expect(newState.orderRequest).toBe(true);
+    expect(newState.orderError).toBe(null);
+  });
+
+  it('Action order/send/rejected', () => {
+    const initalState = {
+      ...initialOrderState,
+      orderRequest: true,
+      orderError: null
+    };
+
+    const newState = orderSlice.reducer(initalState, {
+      type: 'order/send/rejected',
+      error: { message: 'Error message' }
+    });
+
+    expect(newState.orderRequest).toBe(false);
+    expect(newState.orderError).toBe('Error message');
+  });
+
+  it('Action order/send/fulfilled', () => {
+    const bun = { ...mockIngredients[0], id: uuidv4() };
+    const ingredients = [
+      { ...mockIngredients[1], id: uuidv4() },
+      { ...mockIngredients[2], id: uuidv4() },
+      { ...mockIngredients[3], id: uuidv4() }
+    ];
+    const initialState = {
+      ...initialOrderState,
+      constructorItems: {
+        bun,
+        ingredients
+      },
+      orderRequest: true,
+      orderModalData: null
+    };
+    const ids = mockOrderResponse.order.ingredients.map((val) => val._id);
+    const { owner, price, ...order } = mockOrderResponse.order;
+
+    const newState = orderSlice.reducer(initialState, {
+      type: 'order/send/fulfilled',
+      payload: { ...order, ingredients: ids }
+    });
+
+    expect(newState).toEqual({
+      ...initialOrderState,
+      constructorItems: {
+        bun: null,
+        ingredients: []
+      },
+      orderRequest: false,
+      orderModalData: { ...order, ingredients: ids }
+    });
+  });
+
   it('Async action orderSend', async () => {
     orderBurgerApiSpy.mockResolvedValue(mockOrderResponse);
 
@@ -231,4 +363,18 @@ describe('Reducer order', () => {
     const isLoading = requestSelector(store.getState());
     expect(isLoading).toBe(false);
   });
+
+  it('Unknown action', () => {
+    const newState = orderSlice.reducer(initialOrderState, { type: 'UNKNOWN' });
+
+    expect(newState).toEqual(initialOrderState);
+  });
+
+  it('Undefined state', () => {
+    const newState = orderSlice.reducer(undefined, {type: 'order/send/pending'})
+
+    expect(newState.orderRequest).toBe(true);
+    expect(newState.orderModalData).toBe(null);
+    expect(newState.orderError).toBe(null);
+  })
 });

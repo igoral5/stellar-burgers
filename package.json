@@ -92,7 +92,7 @@
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier ./src --write",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "eslintConfig": {
     "extends": [
