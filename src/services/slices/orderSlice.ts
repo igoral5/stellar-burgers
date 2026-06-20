@@ -13,7 +13,7 @@ interface OrderState {
   orderError: string | null;
 }
 
-const initialState: OrderState = {
+export const initialOrderState: OrderState = {
   constructorItems: {
     bun: null,
     ingredients: []
@@ -34,7 +34,7 @@ export const orderSend = createAsyncThunk(
 
 export const orderSlice = createSlice({
   name: 'order',
-  initialState,
+  initialState: initialOrderState,
   reducers: {
     addProduct: {
       reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
