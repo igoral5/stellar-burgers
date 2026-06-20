@@ -2,10 +2,9 @@ import { test, expect } from './fixtures';
 
 test('Order a burger using access token', async ({
   page,
-  mockIngredients,
+  mockApi,
   mockAccesToken,
-  mockGetUser,
-  mockOrder
+  mockGetUser
 }) => {
   await page.goto('/');
   await expect(page.getByTestId('ingredients')).toBeVisible();
@@ -28,7 +27,7 @@ test('Order a burger using access token', async ({
   await expect(page.getByTestId('order-success')).toBeVisible({
     timeout: 20000
   });
-  await expect(page.getByTestId('order-success')).toHaveText('106657');
+  await expect(page.getByTestId('order-success')).toHaveText('106768');
   await page.keyboard.press('Escape');
   await expect(page.getByTestId('order-success')).not.toBeVisible();
   await expect(
@@ -38,12 +37,10 @@ test('Order a burger using access token', async ({
 
 test('Order a burger using refresh token', async ({
   page,
-  mockIngredients,
+  mockApi,
   mockExpiredAccessToken,
   mockRefreshToken,
-  mockGetUser,
-  mockToken,
-  mockOrder
+  mockGetUser
 }) => {
   await page.goto('/');
   await expect(page.getByTestId('ingredients')).toBeVisible();
@@ -66,7 +63,7 @@ test('Order a burger using refresh token', async ({
   await expect(page.getByTestId('order-success')).toBeVisible({
     timeout: 20000
   });
-  await expect(page.getByTestId('order-success')).toHaveText('106657');
+  await expect(page.getByTestId('order-success')).toHaveText('106768');
   await page.keyboard.press('Escape');
   await expect(page.getByTestId('order-success')).not.toBeVisible();
   await expect(
@@ -76,10 +73,8 @@ test('Order a burger using refresh token', async ({
 
 test('Order a burger using manual login', async ({
   page,
-  mockIngredients,
-  mockGetUser,
-  mockLogin,
-  mockOrder
+  mockApi,
+  mockGetUser
 }) => {
   await page.goto('/');
   await expect(page.getByTestId('ingredients')).toBeVisible();
@@ -106,7 +101,7 @@ test('Order a burger using manual login', async ({
   await expect(page.getByTestId('order-success')).toBeVisible({
     timeout: 20000
   });
-  await expect(page.getByTestId('order-success')).toHaveText('106657');
+  await expect(page.getByTestId('order-success')).toHaveText('106768');
   await page.keyboard.press('Escape');
   await expect(page.getByTestId('order-success')).not.toBeVisible();
   await expect(
@@ -114,11 +109,7 @@ test('Order a burger using manual login', async ({
   ).not.toBeVisible();
 });
 
-test('Close modal by press Esc', async ({
-  page,
-  mockIngredients,
-  mockGetUser
-}) => {
+test('Close modal by press Esc', async ({ page, mockApi, mockGetUser }) => {
   await page.goto('/');
   await expect(page.getByTestId('ingredients')).toBeVisible();
   await page
@@ -127,15 +118,14 @@ test('Close modal by press Esc', async ({
     .getByRole('link')
     .click();
   await expect(page.getByTestId('modal')).toBeVisible();
+  await expect(page.getByTestId('modal')).toContainText(
+    'Биокотлета из марсианской Магнолии'
+  );
   await page.keyboard.press('Escape');
   await expect(page.getByTestId('modal')).not.toBeVisible();
 });
 
-test('Close modal by click button', async ({
-  page,
-  mockIngredients,
-  mockGetUser
-}) => {
+test('Close modal by click button', async ({ page, mockApi, mockGetUser }) => {
   await page.goto('/');
   await expect(page.getByTestId('ingredients')).toBeVisible();
   await page
@@ -144,13 +134,16 @@ test('Close modal by click button', async ({
     .getByRole('link')
     .click();
   await expect(page.getByTestId('modal')).toBeVisible();
-  await page.getByRole('button').filter({ hasText: /^$/ }).click();
+  await expect(page.getByTestId('modal')).toContainText(
+    'Биокотлета из марсианской Магнолии'
+  );
+  await page.getByTestId('modal-close').click();
   await expect(page.getByTestId('modal')).not.toBeVisible();
 });
 
 test('Close modal by click modal overlay', async ({
   page,
-  mockIngredients,
+  mockApi,
   mockGetUser
 }) => {
   await page.goto('/');
@@ -161,16 +154,14 @@ test('Close modal by click modal overlay', async ({
     .getByRole('link')
     .click();
   await expect(page.getByTestId('modal')).toBeVisible();
+  await expect(page.getByTestId('modal')).toContainText(
+    'Биокотлета из марсианской Магнолии'
+  );
   await page.getByTestId('modal-overlay').click({ position: { x: 10, y: 10 } });
   await expect(page.getByTestId('modal')).not.toBeVisible();
 });
 
-test('Register new user', async ({
-  page,
-  mockIngredients,
-  mockGetUser,
-  mockRegister
-}) => {
+test('Register new user', async ({ page, mockApi, mockGetUser }) => {
   await page.goto('/');
   await expect(page.getByTestId('ingredients')).toBeVisible();
   await page.getByRole('link', { name: 'Личный кабинет' }).click();
@@ -182,14 +173,7 @@ test('Register new user', async ({
   await expect(page.getByRole('link', { name: 'John Doe' })).toBeVisible();
 });
 
-test('Forgot password', async ({
-  page,
-  mockIngredients,
-  mockGetUser,
-  mockPasswordReset,
-  mockReset,
-  mockLogin
-}) => {
+test('Forgot password', async ({ page, mockApi, mockGetUser }) => {
   await page.goto('/');
   await expect(page.getByTestId('ingredients')).toBeVisible();
   await page.getByRole('link', { name: 'Личный кабинет' }).click();
@@ -203,4 +187,17 @@ test('Forgot password', async ({
   await page.locator('input[name="password"]').fill('secretpassword');
   await page.getByRole('button', { name: 'Войти' }).click();
   await expect(page.getByRole('link', { name: 'John Doe' })).toBeVisible();
+});
+
+test('Add ingredient', async ({ page, mockApi, mockGetUser }) => {
+  await page.goto('/');
+  await expect(page.getByTestId('ingredients')).toBeVisible();
+  await page
+    .getByRole('listitem')
+    .filter({ hasText: 'Биокотлета из марсианской Магнолии' })
+    .getByRole('button')
+    .click();
+  await expect(page.getByTestId('burger-constructor-element')).toContainText(
+    'Биокотлета из марсианской Магнолии'
+  );
 });

@@ -172,7 +172,7 @@ describe('Reducer order', () => {
     };
 
     const newState = orderSlice.reducer(initialState, {
-      type: 'order/send/pending'
+      type: orderSend.pending.type
     });
 
     expect(newState.orderModalData).toBe(null);
@@ -188,7 +188,7 @@ describe('Reducer order', () => {
     };
 
     const newState = orderSlice.reducer(initalState, {
-      type: 'order/send/rejected',
+      type: orderSend.rejected.type,
       error: { message: 'Error message' }
     });
 
@@ -216,7 +216,7 @@ describe('Reducer order', () => {
     const { owner, price, ...order } = mockOrderResponse.order;
 
     const newState = orderSlice.reducer(initialState, {
-      type: 'order/send/fulfilled',
+      type: orderSend.fulfilled.type,
       payload: { ...order, ingredients: ids }
     });
 

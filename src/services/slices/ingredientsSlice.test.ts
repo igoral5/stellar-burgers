@@ -33,7 +33,7 @@ describe('Reducer ingredients', () => {
     };
 
     const newState = ingredientsSlice.reducer(initialState, {
-      type: 'ingredients/getAll/pending'
+      type: fetchIngredients.pending.type
     });
 
     expect(newState.ingredients).toEqual([]);
@@ -50,7 +50,7 @@ describe('Reducer ingredients', () => {
     };
 
     const newState = ingredientsSlice.reducer(initialState, {
-      type: 'ingredients/getAll/rejected',
+      type: fetchIngredients.rejected.type,
       error: { message: 'Error message' }
     });
 
@@ -67,7 +67,7 @@ describe('Reducer ingredients', () => {
     };
 
     const newState = ingredientsSlice.reducer(initalState, {
-      type: 'ingredients/getAll/fulfilled',
+      type: fetchIngredients.fulfilled.type,
       payload: mockIngredients
     });
 

@@ -1,24 +1,17 @@
 import { test as base } from '@playwright/test';
-import { mockOrderResponse } from '@utils-data';
 
 type TMockFixtures = {
-  mockIngredients: void;
+  mockApi: void;
   mockGetUser: void;
-  mockOrder: void;
-  mockToken: void;
-  mockLogin: void;
-  mockRegister: void;
-  mockPasswordReset: void;
-  mockReset: void;
   mockAccesToken: void;
   mockExpiredAccessToken: void;
   mockRefreshToken: void;
 };
 
 export const test = base.extend<TMockFixtures>({
-  mockIngredients: async ({ page }, use) => {
-    await page.routeFromHAR('./tests/hars/ingredients.har', {
-      url: '**/api/ingredients',
+  mockApi: async ({ page }, use) => {
+    await page.routeFromHAR('./tests/hars/api.har', {
+      url: '**/api/**',
       update: false
     });
     await use();
@@ -64,86 +57,6 @@ export const test = base.extend<TMockFixtures>({
           json: { success: false, message: 'You should be authorised' }
         });
       }
-    });
-    await use();
-  },
-
-  mockOrder: async ({ page }, use) => {
-    await page.route('**/api/orders', async (route) => {
-      await route.fulfill({
-        status: 200,
-        json: mockOrderResponse
-      });
-    });
-    await use();
-  },
-
-  mockToken: async ({ page }, use) => {
-    await page.route('**/api/auth/token', async (route) => {
-      await route.fulfill({
-        status: 200,
-        json: {
-          success: true,
-          accessToken: 'Bearer accessToken',
-          refreshToken: 'refreshToken'
-        }
-      });
-    });
-    await use();
-  },
-
-  mockLogin: async ({ page }, use) => {
-    await page.route('**/api/auth/login', async (route) => {
-      await route.fulfill({
-        status: 200,
-        json: {
-          success: true,
-          accessToken: 'Bearer accessToken',
-          refreshToken: 'refreshToken',
-          user: {
-            email: 'user@example.com',
-            name: 'John Doe'
-          }
-        }
-      });
-    });
-    await use();
-  },
-
-  mockRegister: async ({ page }, use) => {
-    await page.route('**/api/auth/register', async (route) => {
-      await route.fulfill({
-        status: 200,
-        json: {
-          success: true,
-          accessToken: 'Bearer accessToken',
-          refreshToken: 'refreshToken',
-          user: {
-            email: 'user@example.com',
-            name: 'John Doe'
-          }
-        }
-      });
-    });
-    await use();
-  },
-
-  mockPasswordReset: async ({ page }, use) => {
-    await page.route('**/api/password-reset', async (route) => {
-      await route.fulfill({
-        status: 200,
-        json: { success: true, message: 'Reset email sent' }
-      });
-    });
-    await use();
-  },
-
-  mockReset: async ({ page }, use) => {
-    await page.route('**/api/password-reset/reset', async (route) => {
-      await route.fulfill({
-        status: 200,
-        json: { success: true, message: 'Password successfully reset' }
-      });
     });
     await use();
   },
