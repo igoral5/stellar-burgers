@@ -8,8 +8,6 @@ import {
 } from '@slices';
 import { mockIngredients } from '@utils-data';
 
-
-
 jest.mock('@api', () => ({
   ...jest.requireActual('@api'),
   getIngredientsApi: jest.fn()
@@ -97,7 +95,7 @@ describe('Reducer ingredients', () => {
 
   it('Undefined state', () => {
     const newState = ingredientsSlice.reducer(undefined, {
-      type: 'ingredients/getAll/pending'
+      type: fetchIngredients.pending.type
     });
 
     expect(newState.ingredients).toEqual([]);

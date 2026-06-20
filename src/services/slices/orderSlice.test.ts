@@ -16,8 +16,6 @@ import {
 import { mockIngredients, mockOrderResponse } from '@utils-data';
 import { v4 as uuidv4 } from 'uuid';
 
-
-
 jest.mock('@api', () => ({
   ...jest.requireActual('@api'),
   orderBurgerApi: jest.fn()
@@ -256,10 +254,12 @@ describe('Reducer order', () => {
   });
 
   it('Undefined state', () => {
-    const newState = orderSlice.reducer(undefined, {type: 'order/send/pending'})
+    const newState = orderSlice.reducer(undefined, {
+      type: orderSend.pending.type
+    });
 
     expect(newState.orderRequest).toBe(true);
     expect(newState.orderModalData).toBe(null);
     expect(newState.orderError).toBe(null);
-  })
+  });
 });
