@@ -4,7 +4,7 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 const HTMLWebpackPlugins = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
+
 
 const production = process.env.NODE_ENV === 'production';
 
@@ -70,14 +70,6 @@ module.exports = {
     }),
     new Dotenv({
       systemvars: true
-    }),
-    new CopyPlugin({
-      patterns: [
-        {
-          from: path.resolve(__dirname, '..', 'public/_redirects'),
-          to: path.resolve(__dirname, '..', 'dist')
-        }
-      ]
     })
   ],
   resolve: {
