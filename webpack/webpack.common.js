@@ -67,7 +67,9 @@ module.exports = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development' // значение по умолчанию 'development', если переменная process.env.NODE_ENV не передана при вызове сборки
     }),
-    new Dotenv()
+    new Dotenv({
+      systemvars: true
+    })
   ],
   resolve: {
     extensions: [
