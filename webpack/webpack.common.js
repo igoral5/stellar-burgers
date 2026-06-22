@@ -5,7 +5,6 @@ const HTMLWebpackPlugins = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-
 const production = process.env.NODE_ENV === 'production';
 
 module.exports = {
@@ -102,7 +101,9 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '..', './dist'),
-    filename: production ? '[name].[contenthash].js' : 'bundle.js',
+    filename: production
+      ? 'static/scripts/[name].[contenthash].js' // добавляем хеш к имени файла, если запускаем в режиме production
+      : 'bundle.js',
     clean: true
   }
 };
